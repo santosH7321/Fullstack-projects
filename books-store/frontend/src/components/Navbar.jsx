@@ -30,10 +30,10 @@ export default function Navbar() {
           </li>
           <li>
             <Link
-              to="/account"
+              to="/signin"
               className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
             >
-              Account
+              Login
             </Link>
           </li>
         </ul>
@@ -66,11 +66,11 @@ export default function Navbar() {
             </li>
             <li>
               <Link
-                to="/account"
+                to="/login"
                 className="px-4 py-2 bg-indigo-600 text-white rounded-md inline-block"
                 onClick={() => setOpen(false)}
               >
-                Account
+                Login
               </Link>
             </li>
           </ul>
