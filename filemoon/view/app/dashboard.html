@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filemoon | Dashboard</title>
+    <link rel="shortcut icon" href="../images/contrast-2-line.svg" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+        href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+        rel="stylesheet"
+    />
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+</head>
+<body>
+    <div class="bg-gray-100 h-screen">
+        <aside class="space-y-6 py-6 bg-linear-to-r from-cyan-500 to-blue-500 fixed top-0 left-0 h-full" id="sidebar" style="width: 250px; transition: 0.3s">
+            <div class="flex flex-col items-center">
+                <img src="../images/avt.png" width="80" />
+                <h1 class="text-lg font-medium text-white">Santosh Kumar</h1>
+                <p class="text-sm text-gray-100">santosh@gmail.com</p>
+            </div>
+
+            <div class="px-6 flex flex-col gap-4">
+                <a href="#">
+                    <button class="w-full bg-rose-400 text-white py-2.5 rounded hover:bg-rose-600">
+                        <i class="ri-apps-line"></i>
+                        <label>Dashboard</label>
+                    </button>
+                </a>
+
+                <a href="#">
+                    <button class="w-full bg-rose-400 text-white py-2.5 rounded hover:bg-rose-600">
+                        <i class="ri-file-line"></i>
+                        <label>My Files</label>
+                    </button>
+                </a>
+
+                <a href="#">
+                    <button class="w-full bg-rose-400 text-white py-2.5 rounded hover:bg-rose-600">
+                        <i class="ri-history-line"></i>
+                        <label>History</label>
+                    </button>
+                </a>
+
+                <button class="w-full bg-rose-400 text-white py-2.5 rounded hover:bg-rose-600">
+                    <i class="ri-logout-circle-r-line"></i>
+                    <label>Logout</label>
+                </button>
+            </div>
+        </aside>
+        <section id="section" style="margin-left: 250px; transition: 0.3s">
+            <nav class="bg-white px-6 py-4 w-full shadow-lg flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <i class="ri-contrast-2-fill text-4xl text-violet-700"></i>
+                    <h1 class="text-2xl font-semibold">Filemoon</h1>
+                </div>
+                <div class="space-x-2">
+                    <button class="bg-gray-100 px-3 py-2 rounded hover:bg-gray-200">
+                        <i class="ri-logout-circle-r-line"></i>
+                    </button>
+                    <button onclick="toggleSidebar()" class="bg-gray-100 px-3 py-2 rounded hover:bg-gray-200">
+                        <i class="ri-menu-2-line"></i>
+                    </button>
+                </div>
+            </nav>
+            <div class="p-6 space-y-4">
+                <h1 class="text-lg font-medium">Dashboard</h1>
+                <div class="grid grid-cols-4 gap-8">
+                    <div class="overflow-hidden relative bg-white rounded-lg shadow hover:shadow-lg h-40 flex items-center justify-center flex-col">
+                        <h1 class="text-xl font-semibold text-gray-600">Videos</h1>
+                        <p class="text-4xl font-bold">25609</p>
+                        <div 
+                            class="flex justify-center items-center w-[100px] h-[100px] rounded-full absolute top-7 -left-4"
+                            style="background-image: linear-gradient(to right, #b8cbb8 0%, #b8cbb8 0%, #b465da 0%, #cf6cc9 33%, #ee609c 66%, #ee609c 100%);"
+                            >
+                            <i class="ri-live-line text-4xl text-white"></i>
+                        </div>
+                    </div>
+
+                    <div class="overflow-hidden relative bg-white rounded-lg shadow hover:shadow-lg h-40 flex items-center justify-center flex-col">
+                        <h1 class="text-xl font-semibold text-gray-600">Audio</h1>
+                        <p class="text-4xl font-bold">15662</p>
+                        <div 
+                            class="flex justify-center items-center w-[100px] h-[100px] rounded-full absolute top-7 -left-4"
+                            style="background-image: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);"
+                            >
+                            <i class="ri-folder-music-line text-4xl text-white"></i>
+                        </div>
+                    </div>
+
+                    <div class="overflow-hidden relative bg-white rounded-lg shadow hover:shadow-lg h-40 flex items-center justify-center flex-col">
+                        <h1 class="text-xl font-semibold text-gray-600">PDF</h1>
+                        <p class="text-4xl font-bold">25609</p>
+                        <div 
+                            class="flex justify-center items-center w-[100px] h-[100px] rounded-full absolute top-7 -left-4"
+                            style="background-image: linear-gradient(to right, #f83600 0%, #f9d423 100%);"
+                            >
+                            <i class="ri-file-pdf-2-line text-4xl text-white"></i>
+                        </div>
+                    </div>
+
+                    <div class="overflow-hidden relative bg-white rounded-lg shadow hover:shadow-lg h-40 flex items-center justify-center flex-col">
+                        <h1 class="text-xl font-semibold text-gray-600">Image</h1>
+                        <p class="text-4xl font-bold">750</p>
+                        <div 
+                            class="flex justify-center items-center w-[100px] h-[100px] rounded-full absolute top-7 -left-4"
+                            style="background-image: linear-gradient(to right, #92fe9d 0%, #00c9ff 100%);"
+                            >
+                            <i class="ri-file-image-line text-4xl text-white"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="col-span-2 overflow-hidden relative bg-white rounded-lg shadow hover:shadow-lg p-6">
+                        <h1 class="text-xl font-semibold text-gray-600">Recent Files</h1>
+                        
+                    </div>
+
+                    <div class="col-span-2 overflow-hidden relative bg-white rounded-lg shadow hover:shadow-lg p-6">
+                        <h1 class="text-xl font-semibold text-gray-600">Recent Shared</h1>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script src="../js/layout.js"></script>
+</body>
+</html>
