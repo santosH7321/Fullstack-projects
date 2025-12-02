@@ -1,15 +1,19 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import 'remixicon/fonts/remixicon.css'
-import Navbar from "./components/Navbar"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import 'remixicon/fonts/remixicon.css';
+import Navbar from "./components/Navbar";
+import Home from "./components/Home";
+import Footer from "./components/Footer";
+
 const App = () => {
   return (
-    
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Navbar />} />
-      </Routes>
+        <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+          </Routes>
+        <Footer />
     </BrowserRouter>
-  )
-}
+  );
+};
 
-export default App
+export default App;
