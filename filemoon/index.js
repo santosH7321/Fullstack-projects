@@ -11,7 +11,7 @@ mongoose.connect(process.env.DB)
 })
 
 const express = require("express");
-const { signup } = require("./controller/user.controller");
+const { signup, login } = require("./controller/user.controller");
 const app = express()
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`)
@@ -23,3 +23,4 @@ app.use(express.static("view"));
 
 
 app.post("/signup", signup)
+app.post("/login", login)
