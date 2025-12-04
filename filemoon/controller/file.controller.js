@@ -1,4 +1,5 @@
 const FileModel = require("../model/file.model");
+const fs = require("fs")
 
 const createFile = async (req, res) => {
     try {
@@ -10,7 +11,8 @@ const createFile = async (req, res) => {
         }
 
         const payload = {
-            filename: (file.destination+file.filename),
+            path: (file.destination+file.filename),
+            filename: file.filename,
             type: file.mimetype.split("/")[0],
             size: file.size
         }
@@ -45,6 +47,7 @@ const deleteFile = async (req, res) => {
                 message: "File not found"
             });
         }
+        fs.unlinkSync(file.path)
         res.status(200).json({
             message: "File deleted successfully"
         });
