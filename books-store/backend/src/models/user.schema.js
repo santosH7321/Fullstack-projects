@@ -1,4 +1,5 @@
 import { model, Schema } from "mongoose";
+import bcrypt from "bcrypt";
 
 export const UserSchema = new Schema({
     name: {
@@ -23,5 +24,16 @@ export const UserSchema = new Schema({
     }
 }, { timestamps: true });
 
-const user = model("User", UserSchema);
-export default user;
+UserSchema.pre('save', async function() {
+    const count = await model("User").countDocuments({email: this.email})
+    if(count > 0)
+        throw new Error("Email already exist")
+})
+
+UserSchema.pre('save', async function() {
+    const encryptedPassword = await bcrypt.hash(this.password.toString(), 12)
+    this.password = encryptedPassword
+})
+
+const User = model("User", UserSchema);
+export default User;

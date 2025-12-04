@@ -12,6 +12,7 @@ mongoose.connect(process.env.MONGODB_URL)
 
 import express from "express";
 import cors from "cors";
+import { signup } from "./controllers/user.controller.js";
 
 
 dotenv.config();
@@ -23,10 +24,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.get("/", (req, res) => {
-  res.send("Welcome to the Books Store API");
-});
-
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
+
+app.post("/signup", signup)
