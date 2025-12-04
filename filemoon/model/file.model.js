@@ -10,7 +10,8 @@ const fileSchema = new Schema({
     path: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        lowercase: true
     },
     type: {
         type: String,
