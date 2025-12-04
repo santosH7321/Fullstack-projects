@@ -12,7 +12,7 @@ mongoose.connect(process.env.MONGODB_URL)
 
 import express from "express";
 import cors from "cors";
-import { signup } from "./controllers/user.controller.js";
+import { signin, signup } from "./controllers/user.controller.js";
 
 
 dotenv.config();
@@ -30,3 +30,4 @@ app.listen(port, () => {
 
 
 app.post("/signup", signup)
+app.post("/login", signin)
