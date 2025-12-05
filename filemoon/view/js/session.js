@@ -2,17 +2,14 @@ const getSession = async () => {
     try {
         const session = localStorage.getItem("authToken");
         if(!session)
-        {
-            location.href = "../index.html"
-            return;
-        }
+            return null;
         const payload = {
             token: session
         }
-        await axios.post("http://localhost:8080/token/verify", payload);
+        const {data} = await axios.post("http://localhost:8080/token/verify", payload);
+        return data;    
     } catch (err) {
-        localStorage.clear();
-        location.href = "../index.html"
+        return null;
     }
 }
-getSession()
+
