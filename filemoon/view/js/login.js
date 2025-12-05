@@ -1,6 +1,6 @@
 const toast = new Notyf({
-    x: "", y: "top"
-});
+    position: {x: 'center', y: 'top'}
+})
 
 
 const login = async (e) => {
@@ -17,7 +17,7 @@ const login = async (e) => {
         const {data} = await axios.post("http://localhost:8080/login", payload)
         toast.success(data.message)
         setTimeout(()=>{
-            location.href = "/app/dashboard.html"
+            location.href = "http://127.0.0.1:5500/filemoon/view/app/dashboard.html"
         }, 2000)
     } catch (err) {
         toast.error(err.response ? err.response.data.message : err.message)

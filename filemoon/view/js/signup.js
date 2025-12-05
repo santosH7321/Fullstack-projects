@@ -1,6 +1,6 @@
 const toast = new Notyf({
-    x: "", y: "top"
-});
+    position: {x: 'center', y: 'top'}
+})
 
 
 const signup = async (e) => {
