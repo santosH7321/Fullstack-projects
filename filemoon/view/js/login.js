@@ -16,6 +16,7 @@ const login = async (e) => {
 
         const {data} = await axios.post("http://localhost:8080/login", payload)
         toast.success(data.message)
+        localStorage.setItem("authToken", data.token)   
         setTimeout(()=>{
             location.href = "http://127.0.0.1:5500/filemoon/view/app/dashboard.html"
         }, 2000)
