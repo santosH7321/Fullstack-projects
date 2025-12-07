@@ -10,6 +10,7 @@ mongoose.connect(process.env.DB)
     console.log("Database connection failed ❌")
 })
 
+const root = process.cwd()
 const express = require("express");
 const cors = require("cors")
 const {v4: uniqueId} = require("uuid")
@@ -44,13 +45,47 @@ app.use(cors({
     origin: 'http://127.0.0.1:5500'
 }))
 
+// Ui endpoint
+const getPath = (filename)=>{
+    return path.join(root, "view", filename)
+}
 
+app.get("/signup", (req, res)=>{
+    const p = getPath("signup.html")
+    res.sendFile(p)
+})
 
-app.post("/signup", signup)
-app.post("/login", login)
-app.post("/file",upload.single('file'), createFile)
-app.get("/file", fetchFiles)
-app.delete("/file/:id", deleteFile)
-app.get("/file/download/:id", downloadFile)
-app.get('/dashboard', fetchDashboard)
-app.post("/token/verify", verifyToken)
+app.get("/login", (req, res)=>{
+    const p = getPath("index.html")
+    res.sendFile(p)
+})
+
+app.get("/", (req, res)=>{
+    const p = getPath("index.html")
+    res.sendFile(p)
+})
+
+app.get("/dashboard", (req, res)=>{
+    const p = getPath("app/dashboard.html")
+    res.sendFile(p)
+})
+
+app.get("/history", (req, res)=>{
+    const p = getPath("app/history.html")
+    res.sendFile(p)
+})
+
+app.get("/files", (req, res)=>{
+    const p = getPath("app/files.html")
+    res.sendFile(p)
+})
+
+// API endpoint
+app.post("/api/signup", signup)
+app.post("/api/login", login)
+app.post("/api/file",upload.single('file'), createFile)
+app.get("/api/file", fetchFiles)
+app.delete("/api/file/:id", deleteFile)
+app.get("/api/file/download/:id", downloadFile)
+app.get('/api/dashboard', fetchDashboard)
+app.post("/api/token/verify", verifyToken)

@@ -27,28 +27,28 @@
             </div>
 
             <div class="px-6 flex flex-col gap-4">
-                <a href="./dashboard.html">
+                <a href="/dashboard">
                     <button class="w-full bg-rose-400 text-white py-2.5 rounded hover:bg-rose-600">
                         <i class="ri-apps-line"></i>
                         <label>Dashboard</label>
                     </button>
                 </a>
 
-                <a href="./my-files.html">
+                <a href="/files">
                     <button class="w-full bg-rose-400 text-white py-2.5 rounded hover:bg-rose-600">
                         <i class="ri-file-line"></i>
                         <label>My Files</label>
                     </button>
                 </a>
 
-                <a href="./history.html">
+                <a href="/history">
                     <button class="w-full bg-rose-400 text-white py-2.5 rounded hover:bg-rose-600">
                         <i class="ri-history-line"></i>
                         <label>History</label>
                     </button>
                 </a>
 
-                <button class="w-full bg-rose-400 text-white py-2.5 rounded hover:bg-rose-600">
+                <button class="w-full bg-rose-400 text-white py-2.5 rounded hover:bg-rose-600" onclick="logout()">
                     <i class="ri-logout-circle-r-line"></i>
                     <label>Logout</label>
                 </button>
@@ -128,6 +128,9 @@
             </div>
         </section>
     </div>
+    <script src="../js/env.js"></script>
     <script src="../js/layout.js"></script>
+    <script src="../js/session.js"></script>
+    <script src="../js/dashboard.js"></script>
 </body>
 </html>
