@@ -9,6 +9,9 @@ const Home = () => {
   const [images, setImages] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const [page, setPage] = useState(1)
+  const itemsPerPage = 12
+
 
   const handleFetch = async (url) => {
     setLoading(true)
@@ -25,6 +28,12 @@ const Home = () => {
     }
   }
 
+    const paginatedImages = images.slice(
+        (page - 1) * itemsPerPage,
+        page * itemsPerPage
+    )
+
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-5xl mx-auto">
@@ -40,7 +49,28 @@ const Home = () => {
           </p>
         )}
 
-        {loading ? <Loader /> : <ImageGrid images={images} />}
+        {loading ? <Loader /> : <ImageGrid images={paginatedImages} />}
+
+        {images.length > itemsPerPage && (
+            <div className="flex justify-center gap-4 mt-6">
+                <button
+                disabled={page === 1}
+                onClick={() => setPage(page - 1)}
+                className="px-4 py-2 border rounded disabled:opacity-50"
+                >
+                Prev
+                </button>
+
+                <button
+                disabled={page * itemsPerPage >= images.length}
+                onClick={() => setPage(page + 1)}
+                className="px-4 py-2 border rounded disabled:opacity-50"
+                >
+                Next
+                </button>
+            </div>
+        )}
+
 
       </div>
     </div>
