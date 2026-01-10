@@ -1,6 +1,11 @@
 import express from "express"
 import cors from "cors"
 import imageRoutes from "./routes/image.routes.js"
+import { connectDB } from "./config/db.js"
+import dotenv from "dotenv"
+
+dotenv.config()
+connectDB()
 
 const app = express()
 

@@ -1,6 +1,8 @@
 import axios from "axios"
 import { isValidUrl } from "../utils/isValidUrl.js"
 import { extractImages } from "../utils/imageScraper.js"
+import History from "../models/History.model.js"
+
 
 export const fetchImages = async (req, res) => {
   const { url } = req.body
@@ -18,6 +20,7 @@ export const fetchImages = async (req, res) => {
     })
 
     const images = extractImages(data, url)
+    await History.create({ url, images })
     return res.json(images)
   } catch (error) {
     console.error(error.message)
