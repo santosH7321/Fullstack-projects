@@ -3,6 +3,8 @@ import UrlForm from "../components/UrlForm"
 import ImageGrid from "../components/ImageGrid"
 import Loader from "../components/Loader"
 import History from "../components/History"
+import { toast } from "react-toastify"
+
 import {
   fetchImages,
   fetchHistory,
@@ -22,20 +24,24 @@ const Home = () => {
 
 
   const handleFetch = async (url) => {
-        setLoading(true)
-        setError("")
-        setImages([])
-        setPage(1) 
+    setLoading(true)
+    setError("")
+    setImages([])
+    setPage(1)
 
-        try {
-            const data = await fetchImages(url)
-            setImages(data)
-        } catch (err) {
-            setError("Failed to fetch images. Please try again.")
-        } finally {
-            setLoading(false)
-        }
+    try {
+        const data = await fetchImages(url)
+        setImages(data)
+
+        toast.success(`✅ ${data.length} images fetched`)
+    } catch (err) {
+        setError("Failed to fetch images. Please try again.")
+        toast.error("❌ Failed to fetch images")
+    } finally {
+        setLoading(false)
     }
+}
+
 
 
         useEffect(() => {
@@ -47,15 +53,21 @@ const Home = () => {
         }, [])
 
     const handleDelete = async (id) => {
-    await deleteHistoryItem(id)
-    setHistory((prev) => prev.filter(item => item._id !== id))
-    }
+        await deleteHistoryItem(id)
+        setHistory(prev => prev.filter(item => item._id !== id))
+
+        toast.info("🗑️ History item deleted")
+        }
+
 
     const handleClear = async () => {
         await clearHistory()
         setHistory([])
         setImages([])
+
+        toast.warn("⚠️ All history cleared")
     }
+
 
     const paginatedImages = images.slice(
         (page - 1) * itemsPerPage,
