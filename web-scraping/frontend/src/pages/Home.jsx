@@ -2,6 +2,8 @@ import { useState } from "react"
 import UrlForm from "../components/UrlForm"
 import ImageGrid from "../components/ImageGrid"
 import { fetchImages } from "../services/api"
+import Loader from "../components/Loader"
+
 
 const Home = () => {
   const [images, setImages] = useState([])
@@ -38,7 +40,8 @@ const Home = () => {
           </p>
         )}
 
-        <ImageGrid images={images} />
+        {loading ? <Loader /> : <ImageGrid images={images} />}
+
       </div>
     </div>
   )
