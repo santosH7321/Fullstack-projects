@@ -3,6 +3,9 @@ import UrlForm from "../components/UrlForm"
 import ImageGrid from "../components/ImageGrid"
 import { fetchImages } from "../services/api"
 import Loader from "../components/Loader"
+import History from "../components/History"
+import { fetchHistory } from "../services/api"
+import { useEffect } from "react"
 
 
 const Home = () => {
@@ -10,6 +13,8 @@ const Home = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [page, setPage] = useState(1)
+  const [history, setHistory] = useState([])
+
   const itemsPerPage = 12
 
 
@@ -27,6 +32,15 @@ const Home = () => {
       setLoading(false)
     }
   }
+
+        useEffect(() => {
+        const loadHistory = async () => {
+            const data = await fetchHistory()
+            setHistory(data)
+        }
+        loadHistory()
+        }, [])
+
 
     const paginatedImages = images.slice(
         (page - 1) * itemsPerPage,
@@ -73,6 +87,8 @@ const Home = () => {
 
 
       </div>
+      <History history={history} />
+
     </div>
   )
 }

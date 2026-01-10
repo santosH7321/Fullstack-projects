@@ -6,3 +6,11 @@ export const fetchImages = async (url) => {
   })
   return response.data
 }
+
+export const fetchHistory = async () => {
+  const response = await axios.get(
+    "http://localhost:8080/api/images/history"
+  )
+  return response.data
+}
+
