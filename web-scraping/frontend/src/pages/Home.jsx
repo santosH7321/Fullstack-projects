@@ -1,11 +1,14 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import UrlForm from "../components/UrlForm"
 import ImageGrid from "../components/ImageGrid"
-import { fetchImages } from "../services/api"
 import Loader from "../components/Loader"
 import History from "../components/History"
-import { fetchHistory } from "../services/api"
-import { useEffect } from "react"
+import {
+  fetchImages,
+  fetchHistory,
+  deleteHistoryItem,
+  clearHistory
+} from "../services/api"
 
 
 const Home = () => {
@@ -19,19 +22,21 @@ const Home = () => {
 
 
   const handleFetch = async (url) => {
-    setLoading(true)
-    setError("")
-    setImages([])
+        setLoading(true)
+        setError("")
+        setImages([])
+        setPage(1) 
 
-    try {
-      const data = await fetchImages(url)
-      setImages(data)
-    } catch (err) {
-      setError("Failed to fetch images. Please try again.")
-    } finally {
-      setLoading(false)
+        try {
+            const data = await fetchImages(url)
+            setImages(data)
+        } catch (err) {
+            setError("Failed to fetch images. Please try again.")
+        } finally {
+            setLoading(false)
+        }
     }
-  }
+
 
         useEffect(() => {
         const loadHistory = async () => {
@@ -41,6 +46,16 @@ const Home = () => {
         loadHistory()
         }, [])
 
+    const handleDelete = async (id) => {
+    await deleteHistoryItem(id)
+    setHistory((prev) => prev.filter(item => item._id !== id))
+    }
+
+    const handleClear = async () => {
+        await clearHistory()
+        setHistory([])
+        setImages([])
+    }
 
     const paginatedImages = images.slice(
         (page - 1) * itemsPerPage,
@@ -87,7 +102,12 @@ const Home = () => {
 
 
       </div>
-      <History history={history} />
+      <History
+        history={history}
+        onDelete={handleDelete}
+        onClear={handleClear}
+        />
+
 
     </div>
   )

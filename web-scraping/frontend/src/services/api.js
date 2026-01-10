@@ -14,3 +14,14 @@ export const fetchHistory = async () => {
   return response.data
 }
 
+export const deleteHistoryItem = async (id) => {
+  await axios.delete(
+    `http://localhost:8080/api/images/history/${id}`
+  )
+}
+
+export const clearHistory = async () => {
+  await axios.delete(
+    "http://localhost:8080/api/images/history"
+  )
+}
