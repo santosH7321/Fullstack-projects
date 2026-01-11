@@ -2,6 +2,8 @@ import jwt from "jsonwebtoken"
 import User from "../models/User.js"
 
 const protect = async (req, res, next) => {
+  console.log("HEADERS RECEIVED:", req.headers)
+
   let token
 
   if (
@@ -14,7 +16,7 @@ const protect = async (req, res, next) => {
       req.user = await User.findById(decoded.id).select("-password")
       return next()
     } catch (error) {
-      return res.status(401).json({ message: "Token invalid" })
+      return res.status(401).json({ message: "Invalid token" })
     }
   }
 
