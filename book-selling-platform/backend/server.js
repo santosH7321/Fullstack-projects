@@ -5,6 +5,7 @@ import connectDB from "./config/db.js"
 import authRoutes from "./routes/authRoutes.js"
 import googleAuthRoutes from "./routes/googleAuthRoutes.js"
 import bookRoutes from "./routes/bookRoutes.js"
+import orderRoutes from "./routes/orderRoutes.js"
 
 dotenv.config()
 connectDB()
@@ -23,6 +24,8 @@ app.use("/api/auth", authRoutes)
 app.use("/api/auth", googleAuthRoutes)
 
 app.use("/api/books", bookRoutes)
+
+app.use("/api/orders", orderRoutes)
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
