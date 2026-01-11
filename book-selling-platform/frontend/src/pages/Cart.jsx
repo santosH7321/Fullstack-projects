@@ -1,5 +1,5 @@
 import { useCart } from "../context/CartContext"
-import CartItem from "../components/CartItem"
+import { Link } from "react-router-dom"
 
 export default function Cart() {
   const { cartItems, removeFromCart, updateQty, totalAmount } = useCart()
@@ -13,22 +13,52 @@ export default function Cart() {
       <h2 className="text-2xl font-bold mb-4">Your Cart</h2>
 
       {cartItems.map((item) => (
-        <CartItem
+        <div
           key={item._id}
-          item={item}
-          onRemove={removeFromCart}
-          onUpdate={updateQty}
-        />
+          className="flex justify-between items-center border-b py-3"
+        >
+          <div>
+            <h3 className="font-semibold">{item.title}</h3>
+            <p className="text-sm text-gray-600">₹{item.price}</p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              className="px-2 border"
+              onClick={() => updateQty(item._id, item.qty - 1)}
+              disabled={item.qty === 1}
+            >
+              -
+            </button>
+
+            <span>{item.qty}</span>
+
+            <button
+              className="px-2 border"
+              onClick={() => updateQty(item._id, item.qty + 1)}
+            >
+              +
+            </button>
+
+            <button
+              className="ml-3 text-red-500"
+              onClick={() => removeFromCart(item._id)}
+            >
+              Remove
+            </button>
+          </div>
+        </div>
       ))}
 
       <div className="text-right mt-6">
-        <p className="text-xl font-bold">
-          Total: ₹{totalAmount}
-        </p>
+        <p className="text-xl font-bold">Total: ₹{totalAmount}</p>
 
-        <button className="mt-4 bg-green-600 text-white px-4 py-2 rounded">
+        <Link
+          to="/checkout"
+          className="inline-block mt-4 bg-green-600 text-white px-4 py-2 rounded"
+        >
           Proceed to Checkout
-        </button>
+        </Link>
       </div>
     </div>
   )

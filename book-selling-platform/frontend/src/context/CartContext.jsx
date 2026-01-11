@@ -26,11 +26,17 @@ export const CartProvider = ({ children }) => {
   }
 
   const updateQty = (id, qty) => {
+    if (qty < 1) return
+
     setCartItems(
       cartItems.map((item) =>
         item._id === id ? { ...item, qty } : item
       )
     )
+  }
+
+  const clearCart = () => {
+    setCartItems([])
   }
 
   const totalAmount = cartItems.reduce(
@@ -40,7 +46,14 @@ export const CartProvider = ({ children }) => {
 
   return (
     <CartContext.Provider
-      value={{ cartItems, addToCart, removeFromCart, updateQty, totalAmount }}
+      value={{
+        cartItems,
+        addToCart,
+        removeFromCart,
+        updateQty,
+        clearCart,
+        totalAmount,
+      }}
     >
       {children}
     </CartContext.Provider>
