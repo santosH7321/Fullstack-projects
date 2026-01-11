@@ -4,6 +4,7 @@ import Login from "./pages/Login"
 import Register from "./pages/Register"
 import BookDetails from "./pages/BookDetails"
 import ProtectedRoute from "./components/ProtectedRoute"
+import Cart from "./pages/Cart"
 
 export default function App() {
   return (
@@ -17,9 +18,25 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/books/:id" element={<BookDetails />} />
+        <Route
+          path="/books/:id"
+          element={
+            <ProtectedRoute>
+              <BookDetails />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <Cart />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<h1>404 Page Not Found</h1>} />
       </Routes>
     </BrowserRouter>
   )
