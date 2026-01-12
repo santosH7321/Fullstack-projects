@@ -9,11 +9,15 @@ import Checkout from "./pages/Checkout"
 import OrderSuccess from "./pages/OrderSuccess"
 import MyOrders from "./pages/MyOrders"
 import Navbar from "./components/Navbar"
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+
 
 
 export default function App() {
   return (
     <BrowserRouter>
+    <ToastContainer position="top-right" autoClose={3000} />
       <Navbar />
 
       <Routes>
