@@ -2,9 +2,10 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { GoogleLogin } from "@react-oauth/google"
 import { toast } from "react-toastify"
+import { useDispatch } from "react-redux"
 
 import api from "../services/api"
-import { useAuth } from "../context/AuthContext"
+import { loginSuccess } from "../redux/slices/authSlice"
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -14,9 +15,8 @@ export default function Register() {
   })
   const [loading, setLoading] = useState(false)
 
-  const { login } = useAuth()
+  const dispatch = useDispatch()
   const navigate = useNavigate()
-
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -41,7 +41,7 @@ export default function Register() {
         token: credentialResponse.credential,
       })
 
-      login(res.data)
+      dispatch(loginSuccess(res.data))
       toast.success("Logged in with Google")
       navigate("/")
     } catch {
