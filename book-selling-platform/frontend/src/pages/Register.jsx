@@ -17,7 +17,7 @@ export default function Register() {
   const { login } = useAuth()
   const navigate = useNavigate()
 
-  // ✅ Normal Register → redirect to /login
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
@@ -35,7 +35,6 @@ export default function Register() {
     }
   }
 
-  // ✅ Google Register/Login → auto login → redirect to /
   const handleGoogleRegister = async (credentialResponse) => {
     try {
       const res = await api.post("/auth/google", {
@@ -54,7 +53,6 @@ export default function Register() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-gray-800 px-4">
       <div className="w-full max-w-md rounded-2xl bg-white/95 backdrop-blur shadow-2xl p-8 space-y-6">
 
-        {/* Header */}
         <div className="text-center space-y-2">
           <h2 className="text-3xl font-bold text-gray-900">
             Create an Account
@@ -64,7 +62,6 @@ export default function Register() {
           </p>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="text-sm font-medium text-gray-700">
@@ -124,14 +121,12 @@ export default function Register() {
           </button>
         </form>
 
-        {/* Divider */}
         <div className="flex items-center gap-3">
           <div className="h-px flex-1 bg-gray-300" />
           <span className="text-xs text-gray-500">OR</span>
           <div className="h-px flex-1 bg-gray-300" />
         </div>
 
-        {/* Google Auth */}
         <div className="flex justify-center">
           <GoogleLogin
             onSuccess={handleGoogleRegister}
@@ -141,7 +136,6 @@ export default function Register() {
           />
         </div>
 
-        {/* Footer */}
         <p className="text-center text-sm text-gray-500">
           Already have an account?{" "}
           <span

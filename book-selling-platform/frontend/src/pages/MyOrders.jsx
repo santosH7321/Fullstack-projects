@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react"
-import { useAuth } from "../context/AuthContext"
+import { useSelector } from "react-redux"
 import { getMyOrders } from "../services/orders"
 
 export default function MyOrders() {
-  const { user } = useAuth()
+  const user = useSelector((state) => state.auth.user)
+
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
+        if (!user?.token) return
+
         const res = await getMyOrders(user.token)
         setOrders(res.data)
       } catch (err) {
-        console.error(err)
+        console.error("Failed to fetch orders", err)
       } finally {
         setLoading(false)
       }
@@ -55,7 +58,8 @@ export default function MyOrders() {
           </div>
 
           <p className="text-sm text-gray-600 mb-3">
-            Ordered on: {new Date(order.createdAt).toLocaleDateString()}
+            Ordered on:{" "}
+            {new Date(order.createdAt).toLocaleDateString()}
           </p>
 
           {order.orderItems.map((item) => (
@@ -66,7 +70,9 @@ export default function MyOrders() {
               <span>
                 {item.book?.title} × {item.qty}
               </span>
-              <span>₹{item.price * item.qty}</span>
+              <span>
+                ₹{item.price * item.qty}
+              </span>
             </div>
           ))}
 

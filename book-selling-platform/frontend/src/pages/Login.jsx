@@ -1,14 +1,16 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { GoogleLogin } from "@react-oauth/google"
+import { useDispatch } from "react-redux"
+import { loginSuccess } from "../redux/slices/authSlice"
 
 import api from "../services/api"
-import { useAuth } from "../context/AuthContext"
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" })
   const [loading, setLoading] = useState(false)
-  const { login } = useAuth()
+
+  const dispatch = useDispatch()
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
@@ -16,26 +18,33 @@ export default function Login() {
     try {
       setLoading(true)
       const res = await api.post("/auth/login", form)
-      login(res.data)
+
+      dispatch(loginSuccess(res.data))
       navigate("/")
+    } catch (err) {
+      console.error(err)
     } finally {
       setLoading(false)
     }
   }
 
   const handleGoogleLogin = async (credentialResponse) => {
-    const res = await api.post("/auth/google", {
-      token: credentialResponse.credential,
-    })
-    login(res.data)
-    navigate("/")
+    try {
+      const res = await api.post("/auth/google", {
+        token: credentialResponse.credential,
+      })
+
+      dispatch(loginSuccess(res.data))
+      navigate("/")
+    } catch (err) {
+      console.error("Google Login Failed", err)
+    }
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-gray-800 px-4">
       <div className="w-full max-w-md rounded-2xl bg-white/95 backdrop-blur shadow-2xl p-8 space-y-6">
 
-        {/* Header */}
         <div className="text-center space-y-2">
           <h2 className="text-3xl font-bold text-gray-900">Welcome Back</h2>
           <p className="text-gray-500 text-sm">
@@ -43,7 +52,6 @@ export default function Login() {
           </p>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="text-sm font-medium text-gray-700">
@@ -53,7 +61,7 @@ export default function Login() {
               type="email"
               placeholder="you@example.com"
               className="mt-1 w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm
-                         focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                         focus:outline-none focus:ring-2 focus:ring-black"
               onChange={(e) =>
                 setForm({ ...form, email: e.target.value })
               }
@@ -69,7 +77,7 @@ export default function Login() {
               type="password"
               placeholder="••••••••"
               className="mt-1 w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm
-                         focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                         focus:outline-none focus:ring-2 focus:ring-black"
               onChange={(e) =>
                 setForm({ ...form, password: e.target.value })
               }
@@ -86,27 +94,23 @@ export default function Login() {
           </button>
         </form>
 
-        {/* Divider */}
         <div className="flex items-center gap-3">
           <div className="h-px flex-1 bg-gray-300" />
           <span className="text-xs text-gray-500">OR</span>
           <div className="h-px flex-1 bg-gray-300" />
         </div>
 
-        {/* Google Login */}
         <div className="flex justify-center">
           <GoogleLogin
             onSuccess={handleGoogleLogin}
             onError={() => console.log("Google Login Failed")}
-            theme="outline"
-            size="large"
             shape="pill"
+            size="large"
           />
         </div>
 
-        {/* Footer */}
         <p className="text-center text-sm text-gray-500">
-          Don’t have an account?{" "}
+          Don't have an account?{" "}
           <span
             onClick={() => navigate("/register")}
             className="cursor-pointer font-medium text-black hover:underline"

@@ -1,22 +1,24 @@
 import { Link, useNavigate } from "react-router-dom"
-import { useAuth } from "../context/AuthContext"
-import { useCart } from "../context/CartContext"
-import { IoCartOutline } from "react-icons/io5";
+import { useDispatch, useSelector } from "react-redux"
+import { IoCartOutline } from "react-icons/io5"
+
+import { logout } from "../redux/slices/authSlice"
 
 export default function Navbar() {
-  const { user, logout } = useAuth()
-  const { cartItems } = useCart()
+  const dispatch = useDispatch()
   const navigate = useNavigate()
 
+  const user = useSelector((state) => state.auth.user)
+  const cartItems = useSelector((state) => state.cart.cartItems)
+
   const handleLogout = () => {
-    logout()
+    dispatch(logout())
     navigate("/login")
   }
 
   return (
     <nav className="sticky top-0 z-50 bg-black/90 backdrop-blur border-b border-white/10">
       <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
-
         <Link to="/" className="flex items-center gap-2">
           <span className="text-2xl">📚</span>
           <div>
@@ -28,7 +30,6 @@ export default function Navbar() {
             </p>
           </div>
         </Link>
-
         <div className="flex items-center gap-6 text-sm font-medium text-gray-300">
 
           {user && (
@@ -44,7 +45,8 @@ export default function Navbar() {
                 to="/cart"
                 className="relative hover:text-white transition"
               >
-                <IoCartOutline className="text-xl"/>
+                <IoCartOutline className="text-xl" />
+
                 {cartItems.length > 0 && (
                   <span
                     className="absolute -top-2 -right-3 min-w-[18px] h-[18px]

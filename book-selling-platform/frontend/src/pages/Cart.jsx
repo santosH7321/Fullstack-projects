@@ -1,8 +1,18 @@
-import { useCart } from "../context/CartContext"
 import { Link } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import {
+  removeFromCart,
+  updateQty,
+} from "../redux/slices/cartSlice"
 
 export default function Cart() {
-  const { cartItems, removeFromCart, updateQty, totalAmount } = useCart()
+  const dispatch = useDispatch()
+  const cartItems = useSelector((state) => state.cart.cartItems)
+
+  const totalAmount = cartItems.reduce(
+    (sum, item) => sum + item.price * item.qty,
+    0
+  )
 
   if (cartItems.length === 0) {
     return <p className="text-center mt-10">Cart is empty 🛒</p>
@@ -19,13 +29,19 @@ export default function Cart() {
         >
           <div>
             <h3 className="font-semibold">{item.title}</h3>
-            <p className="text-sm text-gray-600">₹{item.price}</p>
+            <p className="text-sm text-gray-600">
+              ₹{item.price}
+            </p>
           </div>
 
           <div className="flex items-center gap-2">
             <button
               className="px-2 border"
-              onClick={() => updateQty(item._id, item.qty - 1)}
+              onClick={() =>
+                dispatch(
+                  updateQty({ id: item._id, qty: item.qty - 1 })
+                )
+              }
               disabled={item.qty === 1}
             >
               -
@@ -35,14 +51,20 @@ export default function Cart() {
 
             <button
               className="px-2 border"
-              onClick={() => updateQty(item._id, item.qty + 1)}
+              onClick={() =>
+                dispatch(
+                  updateQty({ id: item._id, qty: item.qty + 1 })
+                )
+              }
             >
               +
             </button>
 
             <button
               className="ml-3 text-red-500"
-              onClick={() => removeFromCart(item._id)}
+              onClick={() =>
+                dispatch(removeFromCart(item._id))
+              }
             >
               Remove
             </button>
@@ -51,11 +73,13 @@ export default function Cart() {
       ))}
 
       <div className="text-right mt-6">
-        <p className="text-xl font-bold">Total: ₹{totalAmount}</p>
+        <p className="text-xl font-bold">
+          Total: ₹{totalAmount}
+        </p>
 
         <Link
           to="/checkout"
-          className="inline-block mt-4 bg-green-600 text-white px-4 py-2 rounded"
+          className="inline-block mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
         >
           Proceed to Checkout
         </Link>
