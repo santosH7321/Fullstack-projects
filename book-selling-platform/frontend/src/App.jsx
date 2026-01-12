@@ -11,6 +11,11 @@ import MyOrders from "./pages/MyOrders"
 import Navbar from "./components/Navbar"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import AdminRoute from "./components/AdminRoute"
+import AdminDashboard from "./pages/admin/AdminDashboard"
+import AdminBooks from "./pages/admin/AdminBooks"
+import AddEditBook from "./pages/admin/AddEditBook"
+
 
 
 
@@ -72,6 +77,41 @@ export default function App() {
             <ProtectedRoute>
               <OrderSuccess />
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/admin/books"
+          element={
+            <AdminRoute>
+              <AdminBooks />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/admin/books/:id"
+          element={
+            <AdminRoute>
+              <AddEditBook />
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/admin/books/new"
+          element={
+            <AdminRoute>
+              <AddEditBook />
+            </AdminRoute>
           }
         />
 

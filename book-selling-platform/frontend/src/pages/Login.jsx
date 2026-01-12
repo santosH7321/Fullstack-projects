@@ -20,7 +20,12 @@ export default function Login() {
       const res = await api.post("/auth/login", form)
 
       dispatch(loginSuccess(res.data))
-      navigate("/")
+
+      if (res.data.role === "admin") {
+        navigate("/admin")
+      } else {
+        navigate("/")
+      }
     } catch (err) {
       console.error(err)
     } finally {
@@ -35,7 +40,11 @@ export default function Login() {
       })
 
       dispatch(loginSuccess(res.data))
-      navigate("/")
+      if (res.data.role === "admin") {
+        navigate("/admin")
+      } else {
+        navigate("/")
+      }
     } catch (err) {
       console.error("Google Login Failed", err)
     }
@@ -46,7 +55,9 @@ export default function Login() {
       <div className="w-full max-w-md rounded-2xl bg-white/95 backdrop-blur shadow-2xl p-8 space-y-6">
 
         <div className="text-center space-y-2">
-          <h2 className="text-3xl font-bold text-gray-900">Welcome Back</h2>
+          <h2 className="text-3xl font-bold text-gray-900">
+            Welcome Back
+          </h2>
           <p className="text-gray-500 text-sm">
             Login to continue to your account
           </p>
