@@ -10,7 +10,6 @@ import Login from "./pages/Login"
 import Register from "./pages/Register"
 import BookDetails from "./pages/BookDetails"
 import Cart from "./pages/Cart"
-import Checkout from "./pages/Checkout"
 import OrderSuccess from "./pages/OrderSuccess"
 import MyOrders from "./pages/MyOrders"
 
@@ -48,16 +47,6 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-
-        <Route
-          path="/checkout"
-          element={
-            <ProtectedRoute>
-              <Checkout />
-            </ProtectedRoute>
-          }
-        />
-
         <Route
           path="/orders"
           element={
