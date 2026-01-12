@@ -12,6 +12,7 @@ import BookDetails from "./pages/BookDetails"
 import Cart from "./pages/Cart"
 import OrderSuccess from "./pages/OrderSuccess"
 import MyOrders from "./pages/MyOrders"
+import Footer from "./components/Footer"
 
 
 export default function App() {
@@ -69,6 +70,7 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="*" element={<h1>404 Page Not Found</h1>} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   )
 }

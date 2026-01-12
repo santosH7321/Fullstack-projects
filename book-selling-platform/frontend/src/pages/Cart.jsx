@@ -71,8 +71,8 @@ export default function Cart() {
   }
   if (cartItems.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center mt-20 text-center">
-        <p className="text-4xl mb-4">🛒</p>
+      <div className="h-screen flex flex-col items-center justify-center text-center">
+        <p className="text-4xl">🛒</p>
         <h2 className="text-xl font-semibold">
           Your cart is empty
         </h2>
@@ -92,7 +92,7 @@ export default function Cart() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto mt-12 px-4">
+    <div className="max-w-6xl mx-auto mt-12 px-4 h-screen">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
         <h2 className="text-3xl font-bold">Your Cart</h2>
 
