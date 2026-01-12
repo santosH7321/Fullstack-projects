@@ -7,10 +7,15 @@ import ProtectedRoute from "./components/ProtectedRoute"
 import Cart from "./pages/Cart"
 import Checkout from "./pages/Checkout"
 import OrderSuccess from "./pages/OrderSuccess"
+import MyOrders from "./pages/MyOrders"
+import Navbar from "./components/Navbar"
+
 
 export default function App() {
   return (
     <BrowserRouter>
+      <Navbar />
+
       <Routes>
         <Route
           path="/"
@@ -20,6 +25,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/books/:id"
           element={
@@ -28,8 +34,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+
         <Route
           path="/cart"
           element={
@@ -38,11 +43,40 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
-        <Route path="/success" element={<OrderSuccess />} />
+
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <Checkout />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <MyOrders />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/success"
+          element={
+            <ProtectedRoute>
+              <OrderSuccess />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
         <Route path="*" element={<h1>404 Page Not Found</h1>} />
       </Routes>
     </BrowserRouter>
   )
 }
+
