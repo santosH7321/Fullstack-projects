@@ -1,35 +1,41 @@
 import { useRef, useState } from "react"
+import html2canvas from "html2canvas"
+
 import Toolbar from "./Toolbar"
 import Canvas from "./Canvas"
-import html2canvas from "html2canvas"
+import { templates } from "../../utils/templates"
 
 export default function Editor() {
   const canvasRef = useRef(null)
-
   const [card, setCard] = useState({
     background: null,
     elements: []
   })
 
+  const [activeElementId, setActiveElementId] = useState(null)
+
+  /* ---------------- ADD ELEMENTS ---------------- */
+
   const addText = (type) => {
+    const newElement = {
+      id: crypto.randomUUID(),
+      type: "text",
+      x: 40,
+      y: 40,
+      content: type === "title" ? "Title Text" : "Subtitle Text",
+      style: {
+        fontSize: type === "title" ? "32px" : "20px",
+        color: "#ffffff",
+        fontWeight: "600"
+      }
+    }
+
     setCard(prev => ({
       ...prev,
-      elements: [
-        ...prev.elements,
-        {
-          id: crypto.randomUUID(),
-          type: "text",
-          x: 40,
-          y: 40,
-          content: type === "title" ? "Title Text" : "Subtitle Text",
-          style: {
-            fontSize: type === "title" ? "32px" : "20px",
-            color: "#ffffff",
-            fontWeight: "600"
-          }
-        }
-      ]
+      elements: [...prev.elements, newElement]
     }))
+
+    setActiveElementId(newElement.id)
   }
 
   const addImage = (file) => {
@@ -40,6 +46,7 @@ export default function Editor() {
     }))
   }
 
+
   const updateElementPosition = (id, x, y) => {
     setCard(prev => ({
       ...prev,
@@ -49,23 +56,79 @@ export default function Editor() {
     }))
   }
 
+  const activeElement = card.elements.find(
+    el => el.id === activeElementId
+  )
+
+
+  const updateStyle = (key, value) => {
+    if (!activeElementId) return
+
+    setCard(prev => ({
+      ...prev,
+      elements: prev.elements.map(el =>
+        el.id === activeElementId
+          ? {
+              ...el,
+              style: {
+                ...el.style,
+                [key]: value
+              }
+            }
+          : el
+      )
+    }))
+  }
+
+
+  const applyTemplate = (templateId) => {
+    const template = templates.find(t => t.id === templateId)
+    if (!template) return
+
+    setCard({
+      background: template.background,
+      elements: template.elements
+    })
+
+    setActiveElementId(null)
+  }
+
+
   const download = async () => {
-    const canvas = await html2canvas(canvasRef.current, { scale: 3 })
+    if (!canvasRef.current) return
+
+    const canvas = await html2canvas(canvasRef.current, {
+      scale: 3,
+      useCORS: true
+    })
+
     const link = document.createElement("a")
     link.download = "visiting-card.png"
-    link.href = canvas.toDataURL()
+    link.href = canvas.toDataURL("image/png")
     link.click()
   }
+
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-6xl mx-auto grid grid-cols-4 gap-6">
-        <Toolbar addText={addText} addImage={addImage} download={download} />
+        <Toolbar
+          addText={addText}
+          addImage={addImage}
+          download={download}
+          activeElement={activeElement}
+          updateStyle={updateStyle}
+          applyTemplate={applyTemplate}
+        />
+
         <Canvas
           ref={canvasRef}
           card={card}
           updatePosition={updateElementPosition}
+          activeElementId={activeElementId}
+          setActiveElementId={setActiveElementId}
         />
+
       </div>
     </div>
   )

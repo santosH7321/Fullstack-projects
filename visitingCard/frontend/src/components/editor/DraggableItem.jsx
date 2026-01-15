@@ -1,21 +1,28 @@
-export default function DraggableItem({ element, updatePosition }) {
-  const onDragEnd = (e) => {
-    const parent = e.target.parentElement.getBoundingClientRect()
-    updatePosition(
-      element.id,
-      e.clientX - parent.left,
-      e.clientY - parent.top
-    )
+export default function DraggableItem({
+  element,
+  updatePosition,
+  setActive,
+  isActive
+}) {
+  const handleDragEnd = (e) => {
+    const parentRect = e.target.parentElement.getBoundingClientRect()
+
+    const x = Math.max(0, e.clientX - parentRect.left)
+    const y = Math.max(0, e.clientY - parentRect.top)
+
+    updatePosition(element.id, x, y)
   }
 
   return (
     <div
       draggable
-      onDragEnd={onDragEnd}
+      onClick={() => setActive(element.id)}
+      onDragEnd={handleDragEnd}
       style={{
         left: element.x,
         top: element.y,
-        ...element.style
+        ...element.style,
+        outline: isActive ? "2px dashed #3b82f6" : "none"
       }}
       className="absolute cursor-move select-none"
     >
