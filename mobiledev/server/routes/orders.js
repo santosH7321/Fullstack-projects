@@ -9,8 +9,8 @@ import {
   deleteOrder,
   processPayment,
   sendStripeApi
-} from ('../controllers/orderController.js');
-import { protect, authorize } from ('../middleware/auth.js');
+} from '../controllers/orderController.js';
+import { protect, authorize } from '../middleware/auth.js';
 
 router.route('/').post(protect, createOrder).get(protect, authorize('admin'), allOrders);
 router.route('/me').get(protect, myOrders);

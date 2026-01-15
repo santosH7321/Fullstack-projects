@@ -23,7 +23,7 @@ app.use('/api/products', product);
 app.use('/api/orders', order);
 app.use('/api/users', user);
 
-import errorHandler from './middleware/error';
+import errorHandler from './middleware/error.js';
 app.use(errorHandler);
 
 mongoose.connect(process.env.MONGODB_URI)
