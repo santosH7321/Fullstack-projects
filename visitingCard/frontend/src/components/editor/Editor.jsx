@@ -4,9 +4,11 @@ import html2canvas from "html2canvas"
 import Toolbar from "./Toolbar"
 import Canvas from "./Canvas"
 import { templates } from "../../utils/templates"
+import api from "../../services/api"
 
 export default function Editor() {
   const canvasRef = useRef(null)
+
   const [card, setCard] = useState({
     background: null,
     elements: []
@@ -14,7 +16,14 @@ export default function Editor() {
 
   const [activeElementId, setActiveElementId] = useState(null)
 
-  /* ---------------- ADD ELEMENTS ---------------- */
+  const [loading, setLoading] = useState(false)
+  const [toast, setToast] = useState(null) 
+
+
+  const showToast = (type, message) => {
+    setToast({ type, message })
+    setTimeout(() => setToast(null), 3000)
+  }
 
   const addText = (type) => {
     const newElement = {
@@ -46,7 +55,6 @@ export default function Editor() {
     }))
   }
 
-
   const updateElementPosition = (id, x, y) => {
     setCard(prev => ({
       ...prev,
@@ -55,6 +63,7 @@ export default function Editor() {
       )
     }))
   }
+
 
   const activeElement = card.elements.find(
     el => el.id === activeElementId
@@ -70,16 +79,12 @@ export default function Editor() {
         el.id === activeElementId
           ? {
               ...el,
-              style: {
-                ...el.style,
-                [key]: value
-              }
+              style: { ...el.style, [key]: value }
             }
           : el
       )
     }))
   }
-
 
   const applyTemplate = (templateId) => {
     const template = templates.find(t => t.id === templateId)
@@ -97,20 +102,63 @@ export default function Editor() {
   const download = async () => {
     if (!canvasRef.current) return
 
-    const canvas = await html2canvas(canvasRef.current, {
-      scale: 3,
-      useCORS: true
-    })
+    try {
+      setLoading(true)
 
-    const link = document.createElement("a")
-    link.download = "visiting-card.png"
-    link.href = canvas.toDataURL("image/png")
-    link.click()
+      const canvas = await html2canvas(canvasRef.current, {
+        scale: 3,
+        useCORS: true
+      })
+
+      const link = document.createElement("a")
+      link.download = "visiting-card.png"
+      link.href = canvas.toDataURL("image/png")
+      link.click()
+
+      showToast("success", "Card downloaded successfully")
+    } catch (err) {
+      showToast("error", "Download failed")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+
+  const saveCard = async () => {
+    if (card.elements.length === 0) return
+
+    try {
+      setLoading(true)
+      const res = await api.post("/cards", card)
+      showToast("success", "Card saved successfully")
+      console.log("Saved card:", res.data)
+    } catch (error) {
+      console.error(error)
+      showToast("error", "Failed to save card")
+    } finally {
+      setLoading(false)
+    }
   }
 
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-gray-100 p-6 relative">
+
+      {toast && (
+        <div
+          className={`fixed top-6 right-6 px-4 py-3 rounded shadow text-white
+            ${toast.type === "success" ? "bg-green-600" : "bg-red-600"}`}
+        >
+          {toast.message}
+        </div>
+      )}
+
+      {loading && (
+        <div className="absolute inset-0 bg-black/20 flex items-center justify-center z-50">
+          <div className="w-10 h-10 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
+
       <div className="max-w-6xl mx-auto grid grid-cols-4 gap-6">
         <Toolbar
           addText={addText}
@@ -119,6 +167,8 @@ export default function Editor() {
           activeElement={activeElement}
           updateStyle={updateStyle}
           applyTemplate={applyTemplate}
+          saveCard={saveCard}
+          disableSave={card.elements.length === 0 || loading}
         />
 
         <Canvas
@@ -128,7 +178,6 @@ export default function Editor() {
           activeElementId={activeElementId}
           setActiveElementId={setActiveElementId}
         />
-
       </div>
     </div>
   )

@@ -1,4 +1,4 @@
-import { Image, Download, Type } from "lucide-react"
+import { Image, Download, Type, Save } from "lucide-react"
 
 export default function Toolbar({
   addText,
@@ -6,10 +6,13 @@ export default function Toolbar({
   download,
   activeElement,
   updateStyle,
-  applyTemplate
+  applyTemplate,
+  saveCard,
+  disableSave
 }) {
   return (
     <div className="col-span-1 bg-white rounded-lg shadow p-4 space-y-6">
+
       <div>
         <h3 className="font-semibold text-sm mb-2">Templates</h3>
 
@@ -33,7 +36,7 @@ export default function Toolbar({
 
         <button
           onClick={() => addText("title")}
-          className="w-full border rounded p-2 mb-2 flex items-center justify-center gap-2"
+          className="w-full border rounded p-2 mb-2 flex items-center justify-center gap-2 hover:bg-gray-100"
         >
           <Type size={16} />
           Add Title
@@ -41,7 +44,7 @@ export default function Toolbar({
 
         <button
           onClick={() => addText("subtitle")}
-          className="w-full border rounded p-2 flex items-center justify-center gap-2"
+          className="w-full border rounded p-2 flex items-center justify-center gap-2 hover:bg-gray-100"
         >
           <Type size={16} />
           Add Subtitle
@@ -62,6 +65,7 @@ export default function Toolbar({
       {activeElement && (
         <div>
           <h3 className="font-semibold text-sm mb-2">Text Style</h3>
+
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm">Color</span>
             <input
@@ -101,6 +105,20 @@ export default function Toolbar({
           </div>
         </div>
       )}
+
+      <button
+        onClick={saveCard}
+        disabled={disableSave}
+        className={`w-full p-3 rounded flex items-center justify-center gap-2 text-white
+          ${
+            disableSave
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-green-600 hover:bg-green-700"
+          }`}
+      >
+        <Save size={18} />
+        Save Card
+      </button>
 
       <button
         onClick={download}
