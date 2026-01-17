@@ -1,0 +1,84 @@
+{
+  "compilerOptions": {
+    // Target and Module Configuration
+    "target": "ES2022",
+    "module": "CommonJS", // Changed for better Node.js compatibility
+    "moduleResolution": "node", // As requested
+    "lib": ["ES2022"],
+    
+    // Your requested settings
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "esModuleInterop": true, // As requested
+    "strict": true, // As requested
+    
+    // Additional Strictness Options
+    "noUncheckedIndexedAccess": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "forceConsistentCasingInFileNames": true,
+    
+    // Module Interop
+    "allowSyntheticDefaultImports": true,
+    
+    // Source Maps for debugging
+    "sourceMap": true,
+    "inlineSources": true,
+    "sourceRoot": "/",
+    
+    // Performance
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    
+    // Type Declaration Files (for libraries)
+    "declaration": true,
+    "declarationMap": true,
+    
+    // Advanced Type Safety
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "useUnknownInCatchVariables": true,
+    "noPropertyAccessFromIndexSignature": true,
+    
+    // Additional Settings
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    
+    // Backend-specific
+    "types": ["node"],
+    "allowJs": false,
+    "checkJs": false,
+    
+    // Output formatting
+    "removeComments": false,
+    "preserveConstEnums": true
+  },
+  
+  // File Inclusion/Exclusion
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "custom.d.ts",
+    "global.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "coverage",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/*.e2e.ts",
+    "**/__tests__/**",
+    "**/__mocks__/**"
+  ]
+}
