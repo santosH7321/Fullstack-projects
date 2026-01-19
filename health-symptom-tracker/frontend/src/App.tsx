@@ -6,6 +6,7 @@ import ProtectedRoute from "./components/ProtectedRoute"
 import AddSymptom from "./pages/AddSymptom"
 import History from "./pages/History"
 import Navbar from "./components/Navbar"
+import Footer from "./components/Footer"
 
 export default function App() {
   return (
@@ -39,6 +40,7 @@ export default function App() {
           }
         />
       </Routes>
+      <Footer />
     </BrowserRouter>
   )
 }
