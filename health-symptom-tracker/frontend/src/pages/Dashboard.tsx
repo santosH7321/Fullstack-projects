@@ -1,22 +1,19 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { getSymptoms } from "../services/symptom.service"
-import { getInsights } from "../services/insight.service"
 import SeverityChart from "../components/SeverityChart"
+import InsightsPanel from "../components/InsightsPanel"
 import { prepareWeeklyData } from "../utils/chartData"
 import type { Symptom } from "../types/symptom"
 
 export default function Dashboard() {
   const [symptoms, setSymptoms] = useState<Symptom[]>([])
   const [loading, setLoading] = useState(true)
-  const [insights, setInsights] = useState<string[]>([])
 
   useEffect(() => {
     getSymptoms()
       .then((res) => setSymptoms(res.data.data))
       .finally(() => setLoading(false))
-
-    getInsights().then((res:any) => setInsights(res.data))
   }, [])
 
   const chartData = prepareWeeklyData(symptoms)
@@ -24,6 +21,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-6xl mx-auto space-y-8">
+
         <header>
           <h1 className="text-3xl font-bold text-gray-800">
             Health Dashboard 🩺
@@ -33,24 +31,7 @@ export default function Dashboard() {
           </p>
         </header>
 
-        {insights.length > 0 && (
-          <section className="bg-amber-50 border border-amber-200 rounded-2xl p-6">
-            <h3 className="text-lg font-semibold text-amber-800 mb-3">
-              Health Insights ⚠️
-            </h3>
-            <ul className="space-y-2">
-              {insights.map((insight, idx) => (
-                <li
-                  key={idx}
-                  className="flex items-start gap-2 text-amber-700"
-                >
-                  <span>⚠️</span>
-                  <span>{insight}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
+        <InsightsPanel />
 
         <section className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <Link
@@ -66,7 +47,7 @@ export default function Dashboard() {
                   Log how you’re feeling today
                 </p>
               </div>
-              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-emerald-100 text-emerald-600 text-2xl group-hover:scale-110 transition">
+              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-emerald-100 text-emerald-600 text-2xl">
                 ➕
               </div>
             </div>
@@ -85,7 +66,7 @@ export default function Dashboard() {
                   Review past symptom entries
                 </p>
               </div>
-              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 text-2xl group-hover:scale-110 transition">
+              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 text-2xl">
                 📖
               </div>
             </div>
@@ -105,12 +86,9 @@ export default function Dashboard() {
           )}
 
           {!loading && chartData.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
-              <p>No data available for the chart.</p>
-              <p className="text-sm mt-1">
-                Start by adding a symptom.
-              </p>
-            </div>
+            <p className="text-gray-500 text-center py-6">
+              No data available. Start by adding a symptom.
+            </p>
           )}
 
           {!loading && chartData.length > 0 && (
