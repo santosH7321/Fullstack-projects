@@ -6,6 +6,9 @@ export interface ISymptom extends Document {
   severity: number
   notes?: string
   date: Date
+  sleepHours?: number
+  waterIntake?: number
+  mood?: string
 }
 
 const symptomSchema = new mongoose.Schema<ISymptom>(
@@ -27,9 +30,23 @@ const symptomSchema = new mongoose.Schema<ISymptom>(
       max: 5,
     },
     notes: String,
+
     date: {
       type: Date,
       default: Date.now,
+    },
+    sleepHours: {
+      type: Number,
+      min: 0,
+      max: 24,
+    },
+    waterIntake: {
+      type: Number,
+      min: 0,
+    },
+    mood: {
+      type: String,
+      enum: ["happy", "normal", "stressed"],
     },
   },
   { timestamps: true }

@@ -3,7 +3,7 @@ import Symptom from "../models/Symptom"
 import { AuthRequest } from "../middlewares/auth.middleware"
 
 export const addSymptom = async (req: AuthRequest, res: Response) => {
-  const { symptomName, severity, notes, date } = req.body
+  const { symptomName, severity, notes, date, sleepHours, waterIntake, mood } = req.body
 
   const symptom = await Symptom.create({
     user: req.user._id,
@@ -11,6 +11,9 @@ export const addSymptom = async (req: AuthRequest, res: Response) => {
     severity,
     notes,
     date,
+    sleepHours,
+    waterIntake,
+    mood,
   })
 
   res.status(201).json(symptom)
