@@ -11,7 +11,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     getSymptoms()
-      .then((res) => setSymptoms(res.data))
+      .then((res) => setSymptoms(res.data.data))
       .finally(() => setLoading(false))
   }, [])
 

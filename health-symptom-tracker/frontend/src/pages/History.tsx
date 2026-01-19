@@ -29,39 +29,96 @@ export default function History() {
   const [symptoms, setSymptoms] = useState<Symptom[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    getSymptoms()
-      .then((res) => setSymptoms(res.data))
+  const [from, setFrom] = useState("")
+  const [to, setTo] = useState("")
+  const [severity, setSeverity] = useState("")
+  const [page, setPage] = useState(1)
+  const [pages, setPages] = useState(1)
+
+  const fetchData = () => {
+    setLoading(true)
+
+    getSymptoms({
+      from: from || undefined,
+      to: to || undefined,
+      severity: severity ? Number(severity) : undefined,
+      page,
+      limit: 5,
+    })
+      .then((res) => {
+        setSymptoms(res.data.data)
+        setPages(res.data.pages)
+      })
       .finally(() => setLoading(false))
-  }, [])
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [page])
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto space-y-6">
+        <div>
+          <h2 className="text-3xl font-bold text-gray-800">
+            Symptom History 📖
+          </h2>
+          <p className="text-gray-500 mt-1">
+            Review and filter your past symptom logs
+          </p>
+        </div>
+        <div className="bg-white rounded-2xl shadow p-4 grid grid-cols-1 sm:grid-cols-4 gap-4">
+          
+          <input
+            type="date"
+            value={from}
+            onChange={(e) => setFrom(e.target.value)}
+            className="border rounded-lg px-3 py-2 text-sm"
+          />
 
-        <h2 className="text-3xl font-bold text-gray-800">
-          Symptom History 📖
-        </h2>
-        <p className="text-gray-500 mt-1">
-          Review your past symptom logs
-        </p>
+          <input
+            type="date"
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+            className="border rounded-lg px-3 py-2 text-sm"
+          />
 
+          <select
+            value={severity}
+            onChange={(e) => setSeverity(e.target.value)}
+            className="border rounded-lg px-3 py-2 text-sm"
+          >
+            <option value="">All Severities</option>
+            <option value="1">Very Mild</option>
+            <option value="2">Mild</option>
+            <option value="3">Moderate</option>
+            <option value="4">Severe</option>
+            <option value="5">Very Severe</option>
+          </select>
+
+          <button
+            onClick={() => {
+              setPage(1)
+              fetchData()
+            }}
+            className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-4 py-2 text-sm font-medium"
+          >
+            Apply
+          </button>
+        </div>
         {loading && (
-          <p className="mt-6 text-gray-500">Loading symptoms...</p>
+          <p className="text-gray-500">Loading symptoms...</p>
         )}
 
         {!loading && symptoms.length === 0 && (
-          <div className="mt-10 bg-white rounded-xl shadow p-6 text-center">
+          <div className="bg-white rounded-xl shadow p-6 text-center">
             <p className="text-gray-600">
-              No symptoms recorded yet.
-            </p>
-            <p className="text-sm text-gray-400 mt-1">
-              Start by adding your first symptom.
+              No symptoms found for selected filters.
             </p>
           </div>
         )}
 
-        <div className="mt-8 space-y-4">
+        <div className="space-y-4">
           {symptoms.map((s) => (
             <div
               key={s._id}
@@ -91,6 +148,30 @@ export default function History() {
             </div>
           ))}
         </div>
+
+        {/* ================= Pagination ================= */}
+        <div className="flex justify-between items-center pt-4">
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="px-4 py-2 border rounded-lg text-sm disabled:opacity-50"
+          >
+            Prev
+          </button>
+
+          <span className="text-sm text-gray-500">
+            Page {page} of {pages}
+          </span>
+
+          <button
+            onClick={() => setPage((p) => Math.min(pages, p + 1))}
+            disabled={page === pages}
+            className="px-4 py-2 border rounded-lg text-sm disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+
       </div>
     </div>
   )

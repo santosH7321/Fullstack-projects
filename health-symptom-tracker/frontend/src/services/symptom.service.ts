@@ -7,4 +7,14 @@ export const addSymptom = (data: {
   date?: string
 }) => api.post("/symptoms", data)
 
-export const getSymptoms = () => api.get("/symptoms")
+export const getSymptoms = (params?: {
+  from?: string
+  to?: string
+  severity?: number
+  page?: number
+  limit?: number
+}) => {
+  return api.get("/symptoms", {
+    params,
+  })
+}
