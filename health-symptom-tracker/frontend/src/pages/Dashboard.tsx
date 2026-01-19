@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { getSymptoms } from "../services/symptom.service"
+import { getInsights } from "../services/insight.service"
 import SeverityChart from "../components/SeverityChart"
 import { prepareWeeklyData } from "../utils/chartData"
 import type { Symptom } from "../types/symptom"
@@ -8,11 +9,14 @@ import type { Symptom } from "../types/symptom"
 export default function Dashboard() {
   const [symptoms, setSymptoms] = useState<Symptom[]>([])
   const [loading, setLoading] = useState(true)
+  const [insights, setInsights] = useState<string[]>([])
 
   useEffect(() => {
     getSymptoms()
       .then((res) => setSymptoms(res.data.data))
       .finally(() => setLoading(false))
+
+    getInsights().then((res:any) => setInsights(res.data))
   }, [])
 
   const chartData = prepareWeeklyData(symptoms)
@@ -25,9 +29,28 @@ export default function Dashboard() {
             Health Dashboard 🩺
           </h1>
           <p className="text-gray-500 mt-1">
-            Track your symptoms and monitor weekly severity
+            Track symptoms, insights, and weekly severity
           </p>
         </header>
+
+        {insights.length > 0 && (
+          <section className="bg-amber-50 border border-amber-200 rounded-2xl p-6">
+            <h3 className="text-lg font-semibold text-amber-800 mb-3">
+              Health Insights ⚠️
+            </h3>
+            <ul className="space-y-2">
+              {insights.map((insight, idx) => (
+                <li
+                  key={idx}
+                  className="flex items-start gap-2 text-amber-700"
+                >
+                  <span>⚠️</span>
+                  <span>{insight}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         <section className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <Link
@@ -40,7 +63,7 @@ export default function Dashboard() {
                   Add Symptom
                 </h2>
                 <p className="text-gray-500 mt-1">
-                  Log how you're feeling today
+                  Log how you’re feeling today
                 </p>
               </div>
               <div className="w-12 h-12 flex items-center justify-center rounded-full bg-emerald-100 text-emerald-600 text-2xl group-hover:scale-110 transition">
