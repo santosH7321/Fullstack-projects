@@ -7,12 +7,14 @@ import AddSymptom from "./pages/AddSymptom"
 import History from "./pages/History"
 import Navbar from "./components/Navbar"
 import Footer from "./components/Footer"
+import AppRoutes from "./routes/AppRoutes"
 
 export default function App() {
   return (
     <BrowserRouter>
       <Navbar />
       <Routes>
+        <Route path="/" element={<AppRoutes />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route
