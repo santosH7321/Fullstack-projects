@@ -3,4 +3,8 @@ export interface Symptom {
   symptomName: string
   severity: number
   date: string
+  notes?: string
+  sleepHours?: number
+  waterIntake?: number
+  mood?: string
 }
