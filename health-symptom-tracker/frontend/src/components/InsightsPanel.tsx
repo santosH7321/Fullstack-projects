@@ -7,7 +7,8 @@ export default function InsightsPanel() {
 
   useEffect(() => {
     getInsights()
-      .then((res) => setInsights(res.data))
+      .then((res) => {
+        setInsights(res.data) })
       .finally(() => setLoading(false))
   }, [])
 

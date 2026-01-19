@@ -5,10 +5,12 @@ import Dashboard from "./pages/Dashboard"
 import ProtectedRoute from "./components/ProtectedRoute"
 import AddSymptom from "./pages/AddSymptom"
 import History from "./pages/History"
+import Navbar from "./components/Navbar"
 
 export default function App() {
   return (
     <BrowserRouter>
+      <Navbar />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
