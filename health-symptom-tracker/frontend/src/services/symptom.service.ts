@@ -5,6 +5,9 @@ export const addSymptom = (data: {
   severity: number
   notes?: string
   date?: string
+  sleepHours?: number
+  waterIntake?: number
+  mood?: string
 }) => api.post("/symptoms", data)
 
 export const getSymptoms = (params?: {
