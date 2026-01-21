@@ -7,6 +7,9 @@ interface Symptom {
   severity: number
   notes?: string
   date: string
+  sleepHours?: number
+  waterIntake?: number
+  mood?: string
 }
 
 const severityLabels: Record<number, string> = {
@@ -145,11 +148,30 @@ export default function History() {
                   {s.notes}
                 </p>
               )}
+
+              <div className="mt-4 flex flex-wrap gap-3 text-sm text-gray-600">
+                {s.sleepHours !== undefined && (
+                  <span className="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full">
+                    😴 Sleep: {s.sleepHours} hrs
+                  </span>
+                )}
+
+                {s.waterIntake !== undefined && (
+                  <span className="bg-sky-50 text-sky-700 px-3 py-1 rounded-full">
+                    💧 Water: {s.waterIntake} L
+                  </span>
+                )}
+
+                {s.mood && (
+                  <span className="bg-pink-50 text-pink-700 px-3 py-1 rounded-full">
+                    😊 Mood: {s.mood}
+                  </span>
+                )}
+              </div>
             </div>
           ))}
         </div>
 
-        {/* ================= Pagination ================= */}
         <div className="flex justify-between items-center pt-4">
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}

@@ -47,7 +47,6 @@ export default function AddSymptom() {
         </h2>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-          {/* Symptom Name */}
           <input
             value={symptomName}
             onChange={(e) => setSymptomName(e.target.value)}
@@ -56,7 +55,6 @@ export default function AddSymptom() {
             className="w-full px-4 py-2 border rounded-lg"
           />
 
-          {/* Severity */}
           <div>
             <div className="flex justify-between mb-2">
               <span>Severity</span>
@@ -74,7 +72,6 @@ export default function AddSymptom() {
             />
           </div>
 
-          {/* Notes */}
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
@@ -83,7 +80,6 @@ export default function AddSymptom() {
             className="w-full px-4 py-2 border rounded-lg"
           />
 
-          {/* Sleep */}
           <input
             type="number"
             placeholder="Sleep hours"
@@ -94,7 +90,6 @@ export default function AddSymptom() {
             className="w-full px-4 py-2 border rounded-lg"
           />
 
-          {/* Water */}
           <input
             type="number"
             placeholder="Water intake (liters)"
@@ -107,7 +102,6 @@ export default function AddSymptom() {
             className="w-full px-4 py-2 border rounded-lg"
           />
 
-          {/* Mood */}
           <select
             value={mood}
             onChange={(e) => setMood(e.target.value)}
@@ -119,7 +113,6 @@ export default function AddSymptom() {
             <option value="stressed">Stressed</option>
           </select>
 
-          {/* Buttons */}
           <button
             disabled={loading}
             className="w-full bg-emerald-600 text-white py-2 rounded-lg"
