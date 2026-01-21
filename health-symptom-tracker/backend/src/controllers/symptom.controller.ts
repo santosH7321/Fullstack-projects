@@ -1,23 +1,29 @@
 import { Response } from "express"
 import Symptom from "../models/Symptom"
 import { AuthRequest } from "../middlewares/auth.middleware"
+import { symptomSchema } from "../validators/symptom.validator"
 
 export const addSymptom = async (req: AuthRequest, res: Response) => {
-  const { symptomName, severity, notes, date, sleepHours, waterIntake, mood } = req.body
+  const parsed = symptomSchema.safeParse(req.body)
+
+  if (!parsed.success) {
+    return res.status(400).json(parsed.error.issues)
+  }
+  const { symptomName, severity, notes, sleepHours, waterIntake, mood } = parsed.data
 
   const symptom = await Symptom.create({
     user: req.user._id,
     symptomName,
     severity,
-    notes,
-    date,
-    sleepHours,
-    waterIntake,
-    mood,
+    ...(notes !== undefined && { notes }),
+    ...(sleepHours !== undefined && { sleepHours }),
+    ...(waterIntake !== undefined && { waterIntake }),
+    ...(mood !== undefined && { mood }),
   })
 
-  res.status(201).json(symptom)
+  return res.status(201).json(symptom)
 }
+
 export const getSymptoms = async (req: AuthRequest, res: Response) => {
   const {
     from,
