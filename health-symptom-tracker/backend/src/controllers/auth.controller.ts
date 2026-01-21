@@ -1,6 +1,8 @@
 import { Request, Response } from "express"
 import jwt from "jsonwebtoken"
 import User from "../models/User"
+import { registerSchema, loginSchema } from "../validators/auth.validator"
+
 
 const generateToken = (id: string) => {
   const secret = process.env["JWT_SECRET"]
@@ -14,8 +16,11 @@ const generateToken = (id: string) => {
 }
 
 export const registerUser = async (req: Request, res: Response) => {
+  const parsed = registerSchema.safeParse(req.body)
+  if (!parsed.success) {
+    return res.status(400).json(parsed.error.issues)
+  }
   const { name, email, password } = req.body
-
   const userExists = await User.findOne({ email })
   if (userExists) {
     return res.status(400).json({ message: "User already exists" })
@@ -32,8 +37,11 @@ export const registerUser = async (req: Request, res: Response) => {
 }
 
 export const loginUser = async (req: Request, res: Response) => {
+  const parsed = loginSchema.safeParse(req.body)
+  if (!parsed.success) {
+    return res.status(400).json(parsed.error.issues)
+  }
   const { email, password } = req.body
-
   const user = await User.findOne({ email })
   if (!user || !(await user.comparePassword(password))) {
     return res.status(401).json({ message: "Invalid credentials" })
