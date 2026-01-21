@@ -5,6 +5,7 @@ export interface IUser {
   name: string
   email: string
   password: string
+  alertsEnabled: boolean
 }
 
 export interface IUserMethods {
@@ -34,6 +35,10 @@ const userSchema = new mongoose.Schema<
       type: String,
       required: true,
       minlength: 6,
+    },
+    alertsEnabled: {
+      type: Boolean,
+      default: true,
     },
   },
   { timestamps: true }

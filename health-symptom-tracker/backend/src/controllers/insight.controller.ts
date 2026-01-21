@@ -1,6 +1,9 @@
 import { Response } from "express"
 import Symptom from "../models/Symptom"
 import { AuthRequest } from "../middlewares/auth.middleware"
+import User from "../models/User"
+import { sendEmail } from "../utils/sendEmail"
+
 
 export const getInsights = async (req: AuthRequest, res: Response) => {
   const last7Days = new Date()
@@ -12,6 +15,19 @@ export const getInsights = async (req: AuthRequest, res: Response) => {
   })
 
   const insights: string[] = []
+
+  if (insights.length > 0) {
+  const user = await User.findById(req.user._id)
+
+    if (user?.email) {
+      await sendEmail(
+        user.email,
+        "Health Alert Notification",
+        insights.join("\n")
+      )
+    }
+  }
+
 
   const highSeverityCount = symptoms.filter((s) => s.severity >= 4).length
   if (highSeverityCount >= 3) {
