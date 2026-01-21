@@ -3,11 +3,13 @@ import cors from "cors"
 import authRoutes from "./routes/auth.routes"
 import symptomRoutes from "./routes/symptom.routes"
 import insightRoutes from "./routes/insight.routes"
+import { errorHandler } from "./middlewares/error.middleware"
 
 const app = express()
 
 app.use(cors())
 app.use(express.json())
+app.use(errorHandler)
 
 app.get("/", (_req, res) => {
   res.send("Health Tracker API running")
