@@ -23,6 +23,10 @@ export const protect = async (
       const decoded = jwt.verify(token as string, process.env["JWT_SECRET"]!) as any
 
       req.user = await User.findById(decoded.id).select("-password")
+      if (!req.user) {
+        return res.status(401).json({ message: "User not found" })
+      }
+
       return next()
     } catch (error) {
       return res.status(401).json({ message: "Not authorized" })
