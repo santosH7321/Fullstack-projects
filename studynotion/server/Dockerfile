@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["npx", "pm2-runtime", "index.js"]
+CMD ["npm", "run", "dev"]
