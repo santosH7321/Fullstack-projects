@@ -57,3 +57,38 @@ export const sendOtp = async (req, res) => {
         });
     }
 }
+
+export const verifyOtp = async (req, res) => {
+    try {
+        const { email, otp } = req.body;
+
+        if(!email || !otp) {
+            return res.status(400).json({
+                message: "Please provide both email and OTP",
+                status: false
+            });
+        }
+
+        const otpRecord = await OTP.findOne({ email, otp });
+
+        if(!otpRecord) {
+            return res.status(400).json({
+                message: "Invalid OTP",
+                status: false
+            });
+        }
+
+        await OTP.deleteOne({ _id: otpRecord._id });
+
+        return res.status(200).json({
+            message: "OTP verified successfully",
+            status: true
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Failed to verify OTP",
+            status: false
+        });
+    }
+}

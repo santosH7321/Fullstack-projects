@@ -5,4 +5,5 @@ const AuthRouter = express.Router();
 
 AuthRouter.post("/otp", sendOtp);
 
+
 export default AuthRouter; 
