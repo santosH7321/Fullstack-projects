@@ -209,3 +209,67 @@ export const login = async (req, res) => {
         });
     }
 }
+
+// rotate refresh token
+export const rotateRefreshToken = async (req, res) => {
+    try {
+        // fetch refresh token from cookies
+        const token  = req.cookies.refreshToken;
+        // validation
+        if(!token) {
+            return res.status(400).json({
+                message: "Token is missing in cookies",
+                status: false
+            });
+        }
+        // find session in database
+        const session = await Session.findOne({ refreshToken: hash(token) });
+        // validation isRefreshToken is expired or not
+        if(!session || session.expireAt < new Date()) {
+            return res.status(400).json({
+                message: "Session expired",
+                status: false
+            });
+        }
+         // delete session
+        await Session.deleteOne({ _id: session._id });
+        // rotate refresh token
+        
+        const accessToken = jwt.sign(
+            {   
+                email: session.email,
+                id: session.userId,
+                accountType: session.accountType
+             },
+            process.env.JWT_ACCESS_TOKEN,
+            { expiresIn: "15m" }
+        );
+        const newRefreshToken = crypto.randomBytes(40).toString("hex");
+        // save new refresh token in database
+        await Session.create({
+            userId: session.userId,
+            accountType: session.accountType,
+            refreshToken: hash(newRefreshToken),
+            email: session.email,
+            expireAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        })
+        // send refresh token in cookies
+        res.cookie("refreshToken", newRefreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax"
+        });
+        // return access token in response
+        return res.status(200).json({
+            success: true,
+            message: "Refresh token rotated successfully",
+            accessToken
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Failed to rotate refresh token",
+            status: false
+        });
+    }
+}
