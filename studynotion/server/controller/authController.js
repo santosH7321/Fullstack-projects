@@ -2,6 +2,7 @@ import { sendEmail } from "../helper/send_email.js";
 import OTP from "../model/email.model.js";
 import User from "../model/user.model.js";
 import otpGenerator from "otp-generator";
+import bcrypt from "bcrypt";
 
 export const sendOtp = async (req, res) => {
     try {
@@ -58,37 +59,64 @@ export const sendOtp = async (req, res) => {
     }
 }
 
-export const verifyOtp = async (req, res) => {
+export const signup = async (req, res) => {
     try {
-        const { email, otp } = req.body;
+        const { firstName, lastName, email, password, confirm_password, accountType, otp } = req.body;
 
-        if(!email || !otp) {
+        if(!firstName || !lastName || !email || !password || !confirm_password || !accountType || !otp) {
             return res.status(400).json({
-                message: "Please provide both email and OTP",
+                message: "Please provide all required fields",
                 status: false
             });
         }
 
-        const otpRecord = await OTP.findOne({ email, otp });
+        if(password !== confirm_password) {
+            return res.status(400).json({
+                message: "Passwords do not match",
+                status: false
+            });
+        }
+
+        const existingUser = await User.findOne({ email });
+
+        if(existingUser) {
+            return res.status(400).json({
+                message: "User already exists, please login",
+                status: false
+            });
+        }
+
+        const otpRecord = await OTP.findOne({ email }).sort({ createdAt: -1 });
 
         if(!otpRecord) {
+            return res.status(400).json({
+                message: "Otp not found, please request a new one",
+                status: false
+            });
+        }
+
+        if(otpRecord.otp !== otp) {
             return res.status(400).json({
                 message: "Invalid OTP",
                 status: false
             });
         }
 
+        const hashedPassword = await bcrypt.hash(password, 12);
+
         await OTP.deleteOne({ _id: otpRecord._id });
 
-        return res.status(200).json({
-            message: "OTP verified successfully",
-            status: true
+        const user = await User.create({ firstName, lastName, email, password: hashedPassword, accountType });
+        return res.status(201).json({
+            message: "User registered successfully",
+            status: true,
+            user
         });
     }
     catch (error) {
         res.status(500).json({
-            message: "Failed to verify OTP",
+            message: "Failed to register user",
             status: false
         });
     }
-}
+}  
