@@ -3,6 +3,15 @@ import OTP from "../model/email.model.js";
 import User from "../model/user.model.js";
 import otpGenerator from "otp-generator";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import crypto from "crypto";
+import Session from "../model/session.model.js";
+import { access } from "fs";
+
+
+function hash(value) {
+    return crypto.createHash("sha256").update(value).digest("hex");
+}
 
 export const sendOtp = async (req, res) => {
     try {
@@ -120,3 +129,83 @@ export const signup = async (req, res) => {
         });
     }
 }  
+
+export const login = async (req, res) => {
+    try {
+        // fetch email and password from request body
+        const { email, password } = req.body;
+
+        // validate email and password
+        if(!email || !password) {
+            return res.status(400).json({
+                message: "Invalid user",
+                status: false
+            });
+        }
+
+        // find user by email
+        const user = await User.findOne({ email });
+
+        // if user not found, return error
+        if(!user) {
+            return res.status(404).json({
+                message: "User not found, please signup",
+                status: false
+            });
+        }
+
+        // compare password with hashed password in database
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        // if password is invalid, return error
+        if(!isPasswordValid) {
+            return res.status(400).json({
+                message: "Invalid password",
+                status: false
+            });
+        }
+
+        // generate access token
+        const accessToken = jwt.sign(
+            {   
+                email: user.email,
+                id: user._id,
+                accountType: user.accountType
+             },
+            process.env.JWT_ACCESS_TOKEN,
+            { expiresIn: "15m" }
+        );
+
+        // generate refresh token
+        const refreshToken = crypto.randomBytes(40).toString("hex");
+
+        // save refresh token in database
+        await Session.create({
+            userId: user._id,
+            accountType: user.accountType,
+            refreshToken: hash(refreshToken),
+            email: user.email,
+            expireAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        })
+
+        // send refresh token in cookies
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax"
+        });
+
+        // return access token and user details
+        return res.status(200).json({
+            success: true,
+            message: "User logged in successfully",
+            accessToken
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Failed to login user",
+            status: false
+        });
+    }
+}
