@@ -1,22 +1,25 @@
 import mongoose from "mongoose";
 
-const emailSchema = new mongoose.Schema({
+const otpSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique: true
+        trim: true,
+        lowercase: true
     },
     otp: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     createdAt: {
         type: Date,
         default: Date.now,
+        required: true,
         expires: 300 
     }
 }, { timestamps: true });
 
-const Email = mongoose.model("Email", emailSchema);
+const OTP = mongoose.model("Otp", otpSchema);
 
-export default Email;
+export default OTP;
