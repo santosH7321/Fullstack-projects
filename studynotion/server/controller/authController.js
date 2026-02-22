@@ -273,3 +273,16 @@ export const rotateRefreshToken = async (req, res) => {
         });
     }
 }
+
+// change password
+export const changePassword = async (req, res) => {
+    try {
+        const { email, oldPassword, newPassword, confirmNewPassword } = req.body;
+    }
+    catch(err) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        })
+    }
+}
