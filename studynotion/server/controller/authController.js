@@ -318,6 +318,15 @@ export const changePassword = async (req, res) => {
         user.password = hashedNewPassword;
         await user.save();
 
+        try {
+            await sendEmail(user.email,
+                 "Update Password",
+                `Password is updated for your account ${user.email}`);
+        }
+        catch (error) {
+            console.error("Error sending email:", error);
+        }
+
         return res.status(200).json({
             message: "Password changed successfully",
             status: true
