@@ -339,3 +339,51 @@ export const changePassword = async (req, res) => {
         })
     }
 }
+
+export const reset_password_token = async (req, res) => {
+    try{
+        const { email } = req.body;
+        
+        if(!email) {
+            return res.status(400).json({
+                message: "Please provide email",
+                status: false
+            });
+        }
+
+        const user = await User.findOne({ email });
+
+        if(!user) {
+            return res.status(404).json({
+                message: "User not found",
+                status: false
+            });
+        }
+
+        const token = crypto.randomBytes(20).toString("hex");
+
+        user.reset_password_token = token;
+        user.reset_password_expires = Date.now() + 600000; 
+        await user.save();
+
+        const resetLink = `http://localhost:3000/reset_password?token=${token}`;
+        
+        try {
+            await sendEmail(user.email, "Password Reset Request", `<p>You requested a password reset. Click <a href="${resetLink}">here</a> to reset your password. This link will expire in 10 minutes.</p>`);
+        }
+        catch (error) {
+            console.error("Error sending email:", error);
+        }
+
+        return res.status(200).json({
+            message: "Password reset link sent to email",
+            status: true
+        });
+    }
+    catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        })
+    }
+}
