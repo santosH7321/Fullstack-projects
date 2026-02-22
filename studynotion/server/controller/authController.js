@@ -387,3 +387,53 @@ export const reset_password_token = async (req, res) => {
         })
     }
 }
+
+export const reset_password = async (req, res) => {
+    try {
+        const { token, newPassword, confirmNewPassword } = req.body;
+        
+        if(!token || !newPassword || !confirmNewPassword) {
+            return res.status(400).json({
+                message: "Please provide all required fields",
+                status: false
+            });
+        }
+        
+        if(newPassword !== confirmNewPassword) {
+            return res.status(400).json({
+                message: "New passwords do not match",
+                status: false 
+            });
+        }
+
+        const user = await User.findOne({ 
+            reset_password_token: token, 
+            reset_password_expires: { $gt: Date.now() } 
+        });
+
+        if(!user) {
+            return res.status(400).json({
+                message: "Invalid or expired token",
+                status: false
+            });
+        }
+
+        const hashedNewPassword = await bcrypt.hash(newPassword, 12);
+
+        user.password = hashedNewPassword;
+        user.reset_password_token = undefined;
+        user.reset_password_expires = undefined;
+        await user.save();
+
+        return res.status(200).json({
+            message: "Password reset successfully, please login with new password",
+            status: true
+        });
+    }
+    catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        })
+    }
+}
