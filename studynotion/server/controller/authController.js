@@ -278,6 +278,50 @@ export const rotateRefreshToken = async (req, res) => {
 export const changePassword = async (req, res) => {
     try {
         const { email, oldPassword, newPassword, confirmNewPassword } = req.body;
+
+        const userId = req.user.id;
+
+        if(!userId || !email || !oldPassword || !newPassword || !confirmNewPassword) {
+            return res.status(400).json({
+                message: "Please provide all required fields",
+                status: false
+            });
+        }
+
+        if(newPassword !== confirmNewPassword) {
+            return res.status(400).json({
+                message: "New passwords do not match",
+                status: false
+            });
+        }
+
+        const user = await User.findOne({ _id: userId });
+
+        if(!user) {
+            return res.status(404).json({
+                message: "User not found",
+                status: false
+            });
+        }
+
+        const isOldPasswordValid = await bcrypt.compare(oldPassword, user.password);
+
+        if(!isOldPasswordValid) {
+            return res.status(400).json({
+                message: "Invalid old password",
+                status: false
+            });
+        }
+
+        const hashedNewPassword = await bcrypt.hash(newPassword, 12);
+
+        user.password = hashedNewPassword;
+        await user.save();
+
+        return res.status(200).json({
+            message: "Password changed successfully",
+            status: true
+        });
     }
     catch(err) {
         return res.status(500).json({
