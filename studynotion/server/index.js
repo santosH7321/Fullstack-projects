@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
 import AuthRouter from "./routes/auth.routes.js";
 import { cloudinaryConnect } from "./config/cloudinary.js";
-import fileupload from "express-fileupload";
+import CategoryRouter from "./routes/category.routes.js";
 
 dotenv.config();
 
@@ -23,3 +23,4 @@ app.listen(PORT, () => {
 
 
 app.post("/api/v1/auth", AuthRouter);
+app.post("/api/v1/category", CategoryRouter)
